@@ -4,6 +4,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import LandingPage from './pages/LandingPage';
 import StudentDashboard from './pages/StudentDashboard';
 import ResultPage from './pages/ResultPage';
 import AdminDashboard from './pages/AdminDashboard';
@@ -20,50 +21,57 @@ const ProtectedRoute = ({ children, roleRequired }) => {
   return children;
 };
 
-// Root Redirect Component
+// Root Redirect Component — show landing page to guests, redirect logged-in users
 const RootRedirect = () => {
   const { user, loading } = useAuth();
   if (loading) return null;
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) return <LandingPage />;
   return user.role === 'admin' ? <Navigate to="/admin" replace /> : <Navigate to="/dashboard" replace />;
 };
 
 function AppRoutes() {
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 transition-colors duration-200">
-      <Navbar />
-      <main className="flex-grow container mx-auto px-4 py-8 max-w-7xl animate-fade-in">
-        <Routes>
-          <Route path="/" element={<RootRedirect />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          
-          {/* Student Routes */}
-          <Route path="/dashboard" element={
-            <ProtectedRoute roleRequired="student">
-              <StudentDashboard />
-            </ProtectedRoute>
-          } />
-          <Route path="/result" element={
-            <ProtectedRoute roleRequired="student">
-              <ResultPage />
-            </ProtectedRoute>
-          } />
+    <Routes>
+      {/* Landing page — has its own Navbar baked in */}
+      <Route path="/" element={<RootRedirect />} />
 
-          {/* Admin Routes */}
-          <Route path="/admin" element={
-            <ProtectedRoute roleRequired="admin">
-              <AdminDashboard />
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/departments" element={
-            <ProtectedRoute roleRequired="admin">
-              <DepartmentManagement />
-            </ProtectedRoute>
-          } />
-        </Routes>
-      </main>
-    </div>
+      {/* Auth pages + app pages share the inner layout */}
+      <Route path="/*" element={
+        <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 transition-colors duration-200">
+          <Navbar />
+          <main className="flex-grow container mx-auto px-4 py-8 max-w-7xl animate-fade-in">
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+
+              {/* Student Routes */}
+              <Route path="/dashboard" element={
+                <ProtectedRoute roleRequired="student">
+                  <StudentDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/result" element={
+                <ProtectedRoute roleRequired="student">
+                  <ResultPage />
+                </ProtectedRoute>
+              } />
+
+              {/* Admin Routes */}
+              <Route path="/admin" element={
+                <ProtectedRoute roleRequired="admin">
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin/departments" element={
+                <ProtectedRoute roleRequired="admin">
+                  <DepartmentManagement />
+                </ProtectedRoute>
+              } />
+            </Routes>
+          </main>
+        </div>
+      } />
+    </Routes>
   );
 }
 
