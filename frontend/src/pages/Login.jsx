@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { GraduationCap, ShieldAlert } from 'lucide-react';
+import { ShieldAlert } from 'lucide-react';
+import logoUrl from '../assets/Jadavpur_University_Logo.svg.png';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -9,7 +10,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [isAdminMode, setIsAdminMode] = useState(false);
-  
+
   const { login, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -19,12 +20,12 @@ const Login = () => {
     setLoading(true);
     try {
       const u = await login(email, password);
-      
+
       if (isAdminMode && u.role !== 'admin') {
         logout();
         throw new Error('Invalid Admin Credentials');
       }
-      
+
       if (!isAdminMode && u.role === 'admin') {
         logout();
         throw new Error('Please select Admin Login to access the dashboard');
@@ -40,69 +41,69 @@ const Login = () => {
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center">
-      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
+      <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100 dark:border-slate-700 transition-colors duration-200">
         <div className="flex flex-col items-center mb-6">
-          <div className={`p-3 rounded-full mb-3 ${isAdminMode ? 'bg-indigo-50 text-indigo-600' : 'bg-blue-50 text-blue-600'}`}>
-            {isAdminMode ? <ShieldAlert className="h-8 w-8" /> : <GraduationCap className="h-8 w-8" />}
+          <div className={`mb-3 ${isAdminMode ? 'p-3 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400' : ''}`}>
+            {isAdminMode ? <ShieldAlert className="h-8 w-8" /> : <img src={logoUrl} alt="Jadavpur University Logo" className="h-16 w-16" />}
           </div>
-          <h2 className="text-2xl font-bold text-gray-900">{isAdminMode ? 'Admin Portal' : 'Student Portal'}</h2>
-          <p className="text-sm text-gray-500 mt-1">Sign in to your account</p>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{isAdminMode ? 'Admin Portal' : 'Student Portal'}</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Sign in to your account</p>
         </div>
 
-        <div className="flex bg-gray-100 p-1 rounded-lg mb-6">
-          <button 
+        <div className="flex bg-gray-100 dark:bg-slate-900 p-1 rounded-lg mb-6 transition-colors duration-200">
+          <button
             type="button"
-            className={`flex-1 py-2 text-sm font-medium rounded-md transition ${!isAdminMode ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+            className={`flex-1 py-2 text-sm font-medium rounded-md transition ${!isAdminMode ? 'bg-white dark:bg-slate-800 shadow text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'}`}
             onClick={() => { setIsAdminMode(false); setError(''); }}
           >
             Student
           </button>
-          <button 
+          <button
             type="button"
-            className={`flex-1 py-2 text-sm font-medium rounded-md transition ${isAdminMode ? 'bg-white shadow text-indigo-600' : 'text-gray-500 hover:text-gray-700'}`}
+            className={`flex-1 py-2 text-sm font-medium rounded-md transition ${isAdminMode ? 'bg-white dark:bg-slate-800 shadow text-indigo-600 dark:text-indigo-400' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'}`}
             onClick={() => { setIsAdminMode(true); setError(''); }}
           >
             Administrator
           </button>
         </div>
 
-        {error && <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm text-center mb-4">{error}</div>}
-        
+        {error && <div className="bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 p-3 rounded-lg text-sm text-center mb-4">{error}</div>}
+
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-            <input 
-              type="email" 
-              required 
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
+            <input
+              type="email"
+              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
               placeholder="you@example.com"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <input 
-              type="password" 
-              required 
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
+            <input
+              type="password"
+              required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
               placeholder="••••••••"
             />
           </div>
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={loading}
             className={`w-full text-white font-medium py-2.5 rounded-lg transition disabled:opacity-70 disabled:cursor-not-allowed mt-2 ${isAdminMode ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-blue-600 hover:bg-blue-700'}`}
           >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
-        
+
         {!isAdminMode && (
-          <p className="mt-8 text-center text-sm text-gray-600">
-            Don't have an account? <Link to="/register" className="text-blue-600 hover:underline font-medium">Create one</Link>
+          <p className="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
+            Don't have an account? <Link to="/register" className="text-blue-600 dark:text-blue-400 hover:underline font-medium">Create one</Link>
           </p>
         )}
       </div>
