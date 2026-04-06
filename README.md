@@ -9,7 +9,7 @@ A full-stack, enterprise-grade College Admission Management System engineered on
 
 ## Folder Structure
 ```
-d:\college_admissions_system
+\college_admissions_system
 ├── backend/
 │   ├── src/
 │   │   ├── config/ (db connection)
